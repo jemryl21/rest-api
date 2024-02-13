@@ -19,7 +19,7 @@ userRouter.get("/users", async (req: Request, res : Response) => {
     }
 })
 
-userRouter.get("/users/:id",async (req:Request, res: Response) => {
+userRouter.get("/user/:id",async (req:Request, res: Response) => {
     try {
         const user : UnitUser = await database.findOne(req.params.id)
 
