@@ -57,32 +57,6 @@ export const create = async (userData: UnitUser): Promise<UnitUser | null> =>
     return user;
 };
 
-export const findByEmail = async (user_email: string): Promise<null |UnitUser> => {
-
-    const allUsers = await findAll();
-
-    const getUser = allUsers.find(result => user_email === result.email);
-
-    if (!getUser) {
-        return null;
-    }
-    
-    return getUser;
-};
-
-export const comparePassword = async (email : string, supplied_password : string) : Promise<null | UnitUser> => {
-
-    const user = await findByEmail(email)
-
-    const decryptPassword = await bcrypt.compare(supplied_password, user!.password)
-
-    if (!decryptPassword) {
-        return null
-    }
-
-    return user
-}
-
 export const update = async (id : string, updateValues : User) : Promise<UnitUser | null> =>{
 
     const userExists = await findOne(id)
@@ -120,3 +94,37 @@ export const remove = async (id : string) : Promise<null | void> =>{
 
     saveUsers
 }
+
+export const findByEmail = async (user_email: string): Promise<UnitUser[]> => {
+    const allUsers = await findAll();
+    const exactMatch = allUsers.filter((user) => user.email.toLowerCase() === user_email.toLowerCase());
+    const partialMatch = allUsers.filter((user) => user.email.toLowerCase().includes(user_email.toLowerCase()));
+    return [...exactMatch, ...partialMatch];
+};
+
+
+export const findByUsername = async (username: string): Promise<UnitUser[]> => {
+    const allUsers = await findAll();
+    const filteredUsers = allUsers.filter((user) => user.username.toLowerCase().includes(username.toLowerCase()));
+    return filteredUsers;
+};
+
+
+export const comparePassword = async (email: string, supplied_password: string): Promise<UnitUser | null> => {
+    const users = await findByEmail(email);
+
+    if (!users || users.length === 0) {
+        return null;
+    }
+
+
+    const user = users[0];
+
+    const decryptPassword = await bcrypt.compare(supplied_password, user.password);
+
+    if (!decryptPassword) {
+        return null;
+    }
+
+    return user;
+};
