@@ -123,7 +123,7 @@ userRouter.delete("/user/:id", async (req : Request, res :Response) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error})
     }
 })
-
+//IPI REST API
 userRouter.get("/users/search", async (req: Request, res: Response) => {
     try {
         const { name, email } = req.query;

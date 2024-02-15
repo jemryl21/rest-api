@@ -95,6 +95,7 @@ export const remove = async (id : string) : Promise<null | void> =>{
     saveUsers
 }
 
+//IPI REST API
 export const findByEmail = async (user_email: string): Promise<UnitUser[]> => {
     const allUsers = await findAll();
     const exactMatch = allUsers.filter((user) => user.email.toLowerCase() === user_email.toLowerCase());
